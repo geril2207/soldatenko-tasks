@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input id="inputmail" placeholder="Mail" type="text">
+    <button onclick="checkMail()">Проверить</button>
+    <br>
+    <input id="inputhref" placeholder="Href" type="text">
+    <button onclick="checkHref()">Проверить</button>
+
+</body>
+
+
+<script>
+    function checkMail() {
+        let text = document.getElementById('inputmail').value;
+        alert(/\S{0,}@([a-z]){0,10}\.([a-z]){0,5}/.test(text))
+    }
+    function checkHref() {
+        let text = document.getElementById('inputhref').value;
+        alert(/https?:\/\/(\S{0,})/.test(text))
+    }
+</script>
+
+</html>

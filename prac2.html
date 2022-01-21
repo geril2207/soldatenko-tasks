@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pr2</title>
+  </head>
+  <body>
+    <ul id="root"></ul>
+  </body>
+
+  <script>
+    const arr = [
+      { id: 2, name: 'Организация', parent_id: null },
+      { id: 3, name: 'Бухгалтерия', parent_id: 2 },
+      { id: 6, name: ' Отдел охраны', parent_id: 2 },
+      { id: 7, name: 'Караульная служба', parent_id: 6 },
+      { id: 8, name: 'Бюро пропусков', parent_id: 6 },
+      { id: 12, name: 'Патентный отдел', parent_id: 2 },
+      { id: 13, name: 'Лётная служба', parent_id: 2 },
+      { id: 14, name: 'Лётный отряд Боинг 737', parent_id: 13 },
+      { id: 17, name: 'Лётный отряд Боинг 747', parent_id: 13 },
+      { id: 18, name: '1-ая авиационная эксадрилия Боинг 737', parent_id: 14 },
+      { id: 19, name: '2-ая авиационная эскадрилия Боинг 737', parent_id: 14 },
+      { id: 21, name: 'Лётно-методический отдел', parent_id: 19 },
+    ]
+    let htmlStr = ``
+    const generateHtmlStr = (obj) => {
+      if (obj.children) {
+        htmlStr += `<li>${obj.name} <ul>`
+        for (let i = 0; i < obj.children.length; i++) {
+          const element = obj.children[i]
+          generateHtmlStr(element)
+        }
+        return (htmlStr += `</ul></li>`)
+      } else {
+        return (htmlStr += `<li>${obj.name}</li>`)
+      }
+    }
+    const newObj = filterArray(arr)[0]
+
+    function renderTree() {
+      generateHtmlStr(newObj)
+      root.insertAdjacentHTML('beforeend', htmlStr)
+    }
+
+    renderTree()
+
+    function filterArray(flat) {
+      const roots = [],
+        map = [],
+        id = []
+      flat.forEach((item) => {
+        map.push(Object.assign({}, item))
+        id.push(item.id)
+      })
+      let i
+      map.forEach((item) => {
+        if (!item.parent_id || (i = id.indexOf(item.parent_id)) === -1) {
+          roots.push(item)
+          return
+        }
+        if (map[i].children) {
+          map[i].children.push(item)
+        } else {
+          map[i].children = [item]
+        }
+      })
+      return roots
+    }
+  </script>
+</html>

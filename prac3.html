@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pr3</title>
+  </head>
+  <style>
+    #content {
+      display: none;
+    }
+    .content-showed {
+      display: block !important;
+    }
+  </style>
+  <body>
+    <div class="root">
+      <button id="btn"></button>
+      <div id="content">
+        Контент Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+        Voluptates, corrupti. Distinctio accusantium ullam, debitis hic saepe
+        incidunt doloribus suscipit praesentium.
+      </div>
+    </div>
+
+    <script>
+      let showBool = false
+      btn.innerText = showBool ? 'Скрыть' : 'Показать'
+      function clickHandler() {
+        showBool = !showBool
+        if (showBool) {
+          btn.innerText = 'Скрыть'
+          return content.classList.add('content-showed')
+        }
+        btn.innerText = 'Показать'
+        return content.classList.remove('content-showed')
+      }
+      btn.addEventListener('click', clickHandler)
+    </script>
+  </body>
+</html>
