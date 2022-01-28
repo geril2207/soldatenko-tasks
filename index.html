@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="counter">
+        <form action="">
+            <p>Фамиилия
+                <br>
+                <input required v-model='formData.surname' type="text" placeholder="">
+            </p>
+            <p>Имя
+                <br>
+                <input required v-model='formData.name' type="text" placeholder="">
+            </p>
+            <p>Отчество
+                <br>
+                <input required v-model='formData.lastname' type="text" placeholder="">
+            </p>
+            <p>Телефон
+                <br>
+                <input required v-model='formData.phone' type="tel" placeholder="">
+            </p>
+            <p>Избранное
+                <input required v-model='formData.favourites' type="checkbox">
+            </p>
+        </form>
+        <button @click="()=>addPos(this.formData)">Добавить</button>
+        Фильтрация
+        <select @change='filter' v-model='sort' size="1">
+            <option disabled>Отсортировать по</option>
+            <option value="name">Имени</option>
+            <option value="surname">Фамилии</option>
+            <option value="lastname">Отчеству</option>
+
+
+        </select>
+        <br>
+        <table border="1">
+            <thead>
+                <tr>
+                    <td>Фамилия</td>
+                    <td>Имя</td>
+                    <td>Отчество</td>
+                    <td>Телефон</td>
+                    <td>Избранное</td>
+                    <td>Кнопка</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in favouritesList">
+                    <td>{{item.surname}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.lastname}}</td>
+                    <td>{{item.phone}}</td>
+                    <td>{{item.favourites?'да':'нет'}}</td>
+                    <td>
+                        <button @click='()=>{delFromFavorite(item.id)}'>Удалить из избранного</button>
+                    </td>
+                </tr>
+                <tr v-for="item in list">
+                    <td>{{item.surname}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.lastname}}</td>
+                    <td>{{item.phone}}</td>
+                    <td>{{item.favourites?'да':'нет'}}</td>
+                    <td>
+                        <button @click='()=>{addToFavorite(item.id)}'>Добавить в избранное</button>
+                    </td>
+                </tr>
+            </tbody>
+    </div>
+    </div>
+
+
+</body>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    const
+        List = {
+            data() {
+                return {
+                    formData: {
+                        name: '',
+                        surname: '',
+                        lastname: '',
+                        phone: '',
+                        favourites: false
+                    },
+                    list: [],
+                    favouritesList: [],
+                    sort: false,
+                    id: 0,
+                }
+            }, methods: {
+                addPos() {
+                    if (!this.formData.name || !this.formData.surname || !this.formData.lastname || !this.formData.phone) {
+                        alert('Форма заполнена неверно.')
+                        return
+                    }
+                    console.log(this.list)
+                    if (this.formData.favourites) {
+                        this.favouritesList.push({ ...this.formData, id: this.id++ })
+                    } else {
+                        this.list.push({ ...this.formData, id: this.id++ })
+                    }
+                    for (let key in this.formData) {
+                        this.formData[key] = ''
+                    }
+
+                },
+                filter() {
+                    const SortArray = (x, y) => {
+                        if (x[this.sort].toLowerCase() < y[this.sort].toLowerCase()) { return -1; }
+                        if (x[this.sort].toLowerCase() > y[this.sort].toLowerCase()) { return 1; }
+                        return 0;
+                    }
+                    this.favouritesList.sort(SortArray)
+                    this.list.sort(SortArray)
+                },
+                delFromFavorite(id){
+                    
+                    this.favouritesList.forEach((e, i)=>{
+                        if(e.id == id ){
+                            e.favourites = !e.favourites                            
+                            this.list.push(e)
+                            this.favouritesList.splice(i, 1)
+                            return
+                            
+                        }
+                    })
+                },
+                addToFavorite(id){
+                    this.list.forEach((e, i)=>{
+                        if(e.id == id ){
+                            e.favourites = !e.favourites
+                            
+                            this.favouritesList.push(e)
+                            this.list.splice(i, 1)
+                            
+                            return
+                        }
+                    })
+                }
+            }
+        }
+
+    Vue.createApp(List).mount('#counter')</script>
+
+</html>
