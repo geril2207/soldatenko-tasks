@@ -1,15 +1,16 @@
 <template>
-  Сортировка
-  <select
-    @change="$emit('filter-arr', this.sortStr)"
-    v-model="sortStr"
-    size="1"
-  >
-    <option disabled>Отсортировать по</option>
-    <option value="name">Имени</option>
-    <option value="surname">Фамилии</option>
-    <option value="lastname">Отчеству</option>
-  </select>
+  <div class="wrapper">
+    Сортировка
+    <el-select
+      @change="$emit('filter-arr', this.sortStr)"
+      v-model="sortStr"
+      placeholder="Сортировать по"
+    >
+      <el-option value="Имени" :label="Имени">Имени</el-option>
+      <el-option value="Фамилии" :label="Фамилии">Фамилии</el-option>
+      <el-option value="Отчеству" :label="Отчеству">Отчеству</el-option>
+    </el-select>
+  </div>
 </template>
 
 <script>
@@ -26,4 +27,9 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.wrapper {
+  text-align: center;
+  padding: 15px;
+}
+</style>

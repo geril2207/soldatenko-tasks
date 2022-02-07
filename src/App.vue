@@ -1,14 +1,15 @@
 <template>
   <Form :formData="formData" :handler="addPos" @add-item="addPos" />
   <Sort :sort="sort" @filter-arr="filter" />
-  <table>
+  <table class="list__table">
     <thead>
       <tr>
-        <td>Фамилия</td>
-        <td>Имя</td>
-        <td>Отчество</td>
-        <td>Телефон</td>
-        <td>Избранное</td>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>Телефон</th>
+        <th>Избранное</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -37,8 +38,9 @@ export default {
       },
       list: [],
       favouritesList: [],
-      sort: false,
+      sort: '',
       id: 0,
+      sortStr: '',
     }
   },
   methods: {
@@ -58,15 +60,28 @@ export default {
         this.list.push({ ...this.formData, id: this.id++ })
       }
       for (let key in this.formData) {
-        this.formData[key] = ''
+        if (key !== 'favourites') {
+          this.formData[key] = ''
+          continue
+        }
+        this.formData[key] = false
       }
     },
     filter(value) {
+      const sortValue = {
+        Фамилии: 'surname',
+        Имени: 'name',
+        Отчеству: 'lastname',
+      }
       const SortArray = (x, y) => {
-        if (x[value].toLowerCase() < y[value].toLowerCase()) {
+        if (
+          x[sortValue[value]].toLowerCase() < y[sortValue[value]].toLowerCase()
+        ) {
           return -1
         }
-        if (x[value].toLowerCase() > y[value].toLowerCase()) {
+        if (
+          x[sortValue[value]].toLowerCase() > y[sortValue[value]].toLowerCase()
+        ) {
           return 1
         }
         return 0
@@ -102,4 +117,40 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.list__table {
+  width: 100%;
+  border: none;
+  margin-bottom: 20px;
+}
+.list__table thead th {
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  padding: 10px 15px;
+  background: #40a0ff;
+  color: white;
+  font-size: 14px;
+}
+.list__table thead tr th:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.list__table thead tr th:last-child {
+  border-radius: 0 8px 8px 0;
+}
+.list__table tbody td {
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  vertical-align: top;
+}
+.list__table tbody tr:nth-child(even) {
+  background: #f3f3f3;
+}
+.list__table tbody tr td:first-child {
+  border-radius: 8px 0 0 8px;
+}
+.list__table tbody tr td:last-child {
+  border-radius: 0 8px 8px 0;
+}
+</style>

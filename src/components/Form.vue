@@ -1,32 +1,60 @@
 <template>
-  <div class="form">
-    <form action="">
-      <p>
-        Фамиилия
-        <br />
-        <input required v-model="form.surname" type="text" placeholder="" />
-      </p>
-      <p>
-        Имя
-        <br />
-        <input required v-model="form.name" type="text" placeholder="" />
-      </p>
-      <p>
-        Отчество
-        <br />
-        <input required v-model="form.lastname" type="text" placeholder="" />
-      </p>
-      <p>
-        Телефон
-        <br />
-        <input required v-model="form.phone" type="tel" placeholder="" />
-      </p>
-      <p>
-        Избранное
-        <input required v-model="form.favourites" type="checkbox" />
-      </p>
-    </form>
-    <button @click="formHandler">Добавить</button>
+  <div class="form__wrapper">
+    <div class="form">
+      <form action="">
+        <p>
+          Фамиилия
+          <br />
+          <el-input
+            required
+            v-model="form.surname"
+            type="text"
+            placeholder=""
+          />
+        </p>
+        <p>
+          Имя
+          <br />
+          <el-input
+            required
+            v-styles="{ color: 'white', placeholder: 'Имя' }"
+            v-model="form.name"
+            type="text"
+          />
+        </p>
+        <p>
+          Отчество
+          <br />
+          <el-input
+            required
+            v-model="form.lastname"
+            type="text"
+            placeholder=""
+          />
+        </p>
+        <p>
+          Телефон
+          <br />
+          <el-input required v-model="form.phone" type="tel" placeholder="" />
+        </p>
+        <p class="p-checkbox-inner">
+          <el-checkbox
+            class="p-checkbox"
+            label="Избранное"
+            required
+            v-model="form.favourites"
+            size="large"
+            @change="changeHandler"
+          />
+        </p>
+      </form>
+      <el-button class="form__btn_submit" type="primary" @click="formHandler"
+        >Добавить</el-button
+      >
+    </div>
+    <div class="line">
+      <div></div>
+    </div>
   </div>
 </template>
 
@@ -45,10 +73,46 @@ export default {
   },
   methods: {
     formHandler() {
-        this.$emit('add-item')
+      this.$emit('add-item')
+      console.log(this.form)
+    },
+    changeHandler() {
+      console.log(this.form)
+    },
+  },
+  directives: {
+    styles: {
+      mounted(el, bindings) {
+        console.log(el, bindings)
+      },
     },
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.form {
+  max-width: 300px;
+  text-align: center;
+  margin: 0 auto;
+}
+.p-checkbox-inner {
+  display: flex;
+  align-items: center;
+}
+.el-checkbox {
+  width: 30px;
+  height: 30px;
+  margin-left: 15px;
+}
+
+.line div {
+  margin-top: 10px;
+  width: 100%;
+  height: 0;
+  border-bottom: 1px solid var(--el-border-color-base);
+}
+.form__btn_submit {
+  width: 100%;
+}
+</style>

@@ -6,9 +6,9 @@
     <td>{{ item.phone }}</td>
     <td>{{ item.favourites ? 'да' : 'нет' }}</td>
     <td>
-      <button @click="favHandler(item.id)">
+      <el-button @click="favHandler(item.id)" type="primary">
         {{ item.favourites ? 'Удалить из избранного' : 'Добавить в избранное' }}
-      </button>
+      </el-button>
     </td>
   </tr>
 </template>
@@ -25,9 +25,18 @@ export default {
         ? this.$root.delFromFavorite(id)
         : this.$root.addToFavorite(id)
     },
+    filters: {
+      upperCase(str) {
+        return str.toUpperCase()
+      },
+    },
   },
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+td {
+  text-align: center;
+}
+</style>
