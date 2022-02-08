@@ -38,5 +38,6 @@ export default {
 <style scoped>
 td {
   text-align: center;
+  vertical-align: middle;
 }
 </style>

@@ -17,7 +17,6 @@
           <br />
           <el-input
             required
-            v-styles="{ color: 'white', placeholder: 'Имя' }"
             v-model="form.name"
             type="text"
           />
@@ -44,7 +43,6 @@
             required
             v-model="form.favourites"
             size="large"
-            @change="changeHandler"
           />
         </p>
       </form>
@@ -74,19 +72,15 @@ export default {
   methods: {
     formHandler() {
       this.$emit('add-item')
-      console.log(this.form)
-    },
-    changeHandler() {
-      console.log(this.form)
     },
   },
-  directives: {
-    styles: {
-      mounted(el, bindings) {
-        console.log(el, bindings)
-      },
-    },
-  },
+  // directives: {
+    // styles: {
+    //   mounted(el, bindings) {
+    //     console.log(el, bindings)
+    //   },
+    // },
+  // },
 }
 </script>
 

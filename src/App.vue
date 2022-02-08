@@ -1,6 +1,8 @@
 <template>
   <Form :formData="formData" :handler="addPos" @add-item="addPos" />
   <Sort :sort="sort" @filter-arr="filter" />
+  Фильтровать по
+  <input type="text" v-model="filterStr" />
   <table class="list__table">
     <thead>
       <tr>
@@ -14,7 +16,7 @@
     </thead>
     <tbody>
       <List :itemsList="favouritesList" />
-      <List :itemsList="list" />
+      <List :itemsList="filteredList" />
     </tbody>
   </table>
 </template>
@@ -41,7 +43,41 @@ export default {
       sort: '',
       id: 0,
       sortStr: '',
+      filterStr: '',
+      filterType: 'surname',
     }
+  },
+  // watch: {
+  //   filterStr() {
+  //     this.filterHandler()
+  //   },
+  //   list: {
+  //     handler(newVal) {
+  //       console.log(newVal)
+  //       this.showedList = [...newVal]
+  //     },
+  //     deep: true,
+  //   },
+
+  //   favouritesList: {
+  //     handler(newVal) {
+  //       this.showedFavList = [...newVal]
+  //     },
+  //     deep: true,
+  //   },
+  // },
+  computed: {
+    filteredList() {
+      if (this.filterStr === '') {
+        console.log(this.list)
+        return this.list
+      }
+      const filterdList = []
+      return filterdList
+    },
+    upperSurname() {
+      return this.formData.surname.toUpperCase()
+    },
   },
   methods: {
     addPos() {
@@ -68,20 +104,17 @@ export default {
       }
     },
     filter(value) {
-      const sortValue = {
+      const sortValues = {
         Фамилии: 'surname',
         Имени: 'name',
         Отчеству: 'lastname',
       }
+      this.sortStr = sortValues[value]
       const SortArray = (x, y) => {
-        if (
-          x[sortValue[value]].toLowerCase() < y[sortValue[value]].toLowerCase()
-        ) {
+        if (x[this.sortStr].toLowerCase() < y[this.sortStr].toLowerCase()) {
           return -1
         }
-        if (
-          x[sortValue[value]].toLowerCase() > y[sortValue[value]].toLowerCase()
-        ) {
+        if (x[this.sortStr].toLowerCase() > y[this.sortStr].toLowerCase()) {
           return 1
         }
         return 0
@@ -90,7 +123,6 @@ export default {
       this.list.sort(SortArray)
     },
     delFromFavorite(id) {
-      console.log(id)
       this.favouritesList.forEach((e, i) => {
         if (e.id == id) {
           e.favourites = !e.favourites
@@ -101,7 +133,6 @@ export default {
       })
     },
     addToFavorite(id) {
-      console.log(id)
       this.list.forEach((e, i) => {
         if (e.id == id) {
           e.favourites = !e.favourites
@@ -112,6 +143,25 @@ export default {
           return
         }
       })
+    },
+
+    filterHandler() {
+      if (this.filterStr === '') {
+        return (
+          (this.showedList = [...this.list]),
+          (this.showedFavList = [...this.favouritesList])
+        )
+      }
+      // this.showedList = this.list.filter((item) =>
+      //   item[this.filterType].indexOf(this.filterStr)
+      // )
+      // this.showedFavList = this.favouritesList.filter((item) =>
+      //   item[this.filterType].indexOf(this.filterStr)
+      // )
+      console.log(this.showedList, this.showedFavList)
+    },
+    mounted() {
+      return this.filterHandler()
     },
   },
 }
