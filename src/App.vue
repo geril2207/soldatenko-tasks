@@ -1,8 +1,11 @@
 <template>
   <Form :formData="formData" :handler="addPos" @add-item="addPos" />
-  <Sort :sort="sort" @filter-arr="filter" />
-  Фильтровать по
-  <input type="text" v-model="filterStr" />
+  <Sort :sort="sort" @filter-arr="sortHandler" />
+  <Filter
+    :filter="filterStr"
+    :filterType="filterType"
+    @filter-type="setFilterType"
+  />
   <table class="list__table">
     <thead>
       <tr>
@@ -15,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <List :itemsList="favouritesList" />
+      <List :itemsList="filteredFavList" />
       <List :itemsList="filteredList" />
     </tbody>
   </table>
@@ -25,10 +28,12 @@
 import Form from './components/Form.vue'
 import Sort from './components/Sort.vue'
 import List from './components/List.vue'
+import Filter from './components/Filter.vue'
 
 export default {
-  components: { Form, Sort, List },
+  components: { Form, Sort, List, Filter },
   name: 'App',
+
   data() {
     return {
       formData: {
@@ -43,42 +48,49 @@ export default {
       sort: '',
       id: 0,
       sortStr: '',
-      filterStr: '',
-      filterType: 'surname',
+      filter: { filterStr: '', filterType: '' },
+      sortValues: {
+        Фамилии: 'surname',
+        Имени: 'name',
+        Отчеству: 'lastname',
+      },
     }
   },
-  // watch: {
-  //   filterStr() {
-  //     this.filterHandler()
-  //   },
-  //   list: {
-  //     handler(newVal) {
-  //       console.log(newVal)
-  //       this.showedList = [...newVal]
-  //     },
-  //     deep: true,
-  //   },
 
-  //   favouritesList: {
-  //     handler(newVal) {
-  //       this.showedFavList = [...newVal]
-  //     },
-  //     deep: true,
-  //   },
-  // },
   computed: {
     filteredList() {
       if (this.filterStr === '') {
-        console.log(this.list)
         return this.list
       }
-      const filterdList = []
-      return filterdList
+      const type = this.sortValues[this.filter.filterType]
+      if (!type) return this.list
+      return this.list.filter((item) =>
+        item[type]
+          .toLowerCase()
+          .indexOf(this.filter.filterStr.toLowerCase()) !== -1
+          ? true
+          : false
+      )
+    },
+    filteredFavList() {
+      if (this.filterStr === '') {
+        return this.favouritesList
+      }
+      const type = this.sortValues[this.filter.filterType]
+      if (!type) return this.favouritesList
+      return this.favouritesList.filter((item) =>
+        item[type]
+          .toLowerCase()
+          .indexOf(this.filter.filterStr.toLowerCase()) !== -1
+          ? true
+          : false
+      )
     },
     upperSurname() {
       return this.formData.surname.toUpperCase()
     },
   },
+
   methods: {
     addPos() {
       if (
@@ -103,13 +115,8 @@ export default {
         this.formData[key] = false
       }
     },
-    filter(value) {
-      const sortValues = {
-        Фамилии: 'surname',
-        Имени: 'name',
-        Отчеству: 'lastname',
-      }
-      this.sortStr = sortValues[value]
+    sortHandler(value) {
+      this.sortStr = this.sortValues[value]
       const SortArray = (x, y) => {
         if (x[this.sortStr].toLowerCase() < y[this.sortStr].toLowerCase()) {
           return -1
@@ -144,24 +151,8 @@ export default {
         }
       })
     },
-
-    filterHandler() {
-      if (this.filterStr === '') {
-        return (
-          (this.showedList = [...this.list]),
-          (this.showedFavList = [...this.favouritesList])
-        )
-      }
-      // this.showedList = this.list.filter((item) =>
-      //   item[this.filterType].indexOf(this.filterStr)
-      // )
-      // this.showedFavList = this.favouritesList.filter((item) =>
-      //   item[this.filterType].indexOf(this.filterStr)
-      // )
-      console.log(this.showedList, this.showedFavList)
-    },
-    mounted() {
-      return this.filterHandler()
+    setFilterType(value) {
+      this.filter.filterType = value
     },
   },
 }

@@ -15,11 +15,7 @@
         <p>
           Имя
           <br />
-          <el-input
-            required
-            v-model="form.name"
-            type="text"
-          />
+          <el-input required v-model="form.name" type="text" />
         </p>
         <p>
           Отчество
@@ -75,11 +71,11 @@ export default {
     },
   },
   // directives: {
-    // styles: {
-    //   mounted(el, bindings) {
-    //     console.log(el, bindings)
-    //   },
-    // },
+  // styles: {
+  //   mounted(el, bindings) {
+  //     console.log(el, bindings)
+  //   },
+  // },
   // },
 }
 </script>

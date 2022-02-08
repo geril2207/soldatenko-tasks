@@ -1,5 +1,5 @@
 <template>
-  <Item :key="item.id" v-for="item in items" :item="item" />
+  <Item :key="item.id" v-for="item in itemsList" :item="item" />
 </template>
 
 <script>
@@ -10,11 +10,8 @@ export default {
   props: {
     itemsList: Array,
   },
-  data() {
-    return {
-      items: this.itemsList,
-    }
-  },
+
+ 
 }
 </script>
 
