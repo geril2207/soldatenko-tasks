@@ -18,8 +18,8 @@
       </tr>
     </thead>
     <tbody>
-      <List :itemsList="filteredFavList" />
-      <List :itemsList="filteredList" />
+      <List :itemsList="favouritesList" :filter="filter.filterStr" />
+      <List :itemsList="list" :filter="filter.filterStr" />
     </tbody>
   </table>
 </template>
@@ -43,8 +43,8 @@ export default {
         phone: '',
         favourites: false,
       },
-      list: [],
       favouritesList: [],
+      list: [],
       sort: '',
       id: 0,
       sortStr: '',
@@ -55,40 +55,6 @@ export default {
         Отчеству: 'lastname',
       },
     }
-  },
-
-  computed: {
-    filteredList() {
-      if (this.filterStr === '') {
-        return this.list
-      }
-      const type = this.sortValues[this.filter.filterType]
-      if (!type) return this.list
-      return this.list.filter((item) =>
-        item[type]
-          .toLowerCase()
-          .indexOf(this.filter.filterStr.toLowerCase()) !== -1
-          ? true
-          : false
-      )
-    },
-    filteredFavList() {
-      if (this.filterStr === '') {
-        return this.favouritesList
-      }
-      const type = this.sortValues[this.filter.filterType]
-      if (!type) return this.favouritesList
-      return this.favouritesList.filter((item) =>
-        item[type]
-          .toLowerCase()
-          .indexOf(this.filter.filterStr.toLowerCase()) !== -1
-          ? true
-          : false
-      )
-    },
-    upperSurname() {
-      return this.formData.surname.toUpperCase()
-    },
   },
 
   methods: {
