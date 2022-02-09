@@ -1,22 +1,36 @@
 <template>
   <div class="item_wrapper">
-    {{ itemData.id }}
+    {{ index + 1 }}.
     {{ itemData.title }}
-    {{ itemData.price }}
-    <el-button
-      class="item__btn"
-      type="primary"
-      @click="$router.push(`/item/${itemData.id}`)"
-      >К описанию</el-button
-    >
+    {{ itemData.price }} &#8381;
+    <div>
+      <el-button
+        class="item__btn"
+        type="primary"
+        @click="$router.push(`/item/${itemData.id}`)"
+        >Редактировать</el-button
+      >
+      <el-button class="item__btn" type="danger" @click="deleteItem"
+        >Удалить</el-button
+      >
+    </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'CatalogItem',
   props: {
     itemData: Object,
+    index: Number,
+  },
+
+  methods: {
+    async deleteItem() {
+      await axios.delete(`http://localhost:3000/items/${this.itemData.id}`)
+      await this.$parent.fetchItems()
+    },
   },
 }
 </script>
@@ -24,7 +38,6 @@ export default {
 <style scoped>
 .item_wrapper {
   margin-left: 40px;
-  width: 500px;
   font-size: 24px;
   display: flex;
   justify-content: space-between;
