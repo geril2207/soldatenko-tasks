@@ -17,7 +17,7 @@
 export default {
   name: 'Sort',
   props: {
-    sort: String,
+    sort: {sort : '1231'},
   },
   data() {
     return {

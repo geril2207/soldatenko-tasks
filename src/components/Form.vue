@@ -10,6 +10,7 @@
             v-model="form.surname"
             type="text"
             placeholder=""
+            v-styles="{ value: '123' }"
           />
         </p>
         <p>
@@ -20,12 +21,7 @@
         <p>
           Отчество
           <br />
-          <el-input
-            required
-            v-model="form.lastname"
-            type="text"
-            placeholder=""
-          />
+          <el-input required v-model="form.lastname" type="text" />
         </p>
         <p>
           Телефон
@@ -70,13 +66,14 @@ export default {
       this.$emit('add-item')
     },
   },
-  // directives: {
-  // styles: {
-  //   mounted(el, bindings) {
-  //     console.log(el, bindings)
-  //   },
-  // },
-  // },
+  directives: {
+    styles: {
+      mounted(el, bindings) {
+        console.log(el, bindings.value)
+        el.value = bindings.value.value
+      },
+    },
+  },
 }
 </script>
 
