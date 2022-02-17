@@ -1,58 +1,141 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <div v-if="request">
+      <el-alert type="success">{{ request }}</el-alert>
+    </div>
+
+    <h1 v-if="step == 'ticket'">Ближайшие билеты</h1>
+    <h1 v-if="step == 'hostel'">Отели в городе</h1>
+    <h1 v-if="step == 'VISA'">Оформить визу</h1>
+
+    <!-- <h1 v-if="step == 'ticket'">Ближайшие билеты</h1> -->
+
+    <!-- Рисуем билеты -->
+    <div v-if="step == 'ticket'" class="cardsWrapper">
+      <div class="card" v-for="item in serverData" :key="item.id">
+        <el-card class="box-card">
+          <ul>
+            <li>Места: {{ item?.from }} - {{ item?.to }}</li>
+            <br />
+            <li>Цена: {{ item.price }} ₽</li>
+            <br />
+            <li>Дата: {{ item.firstData }} - {{ item.secondData }}</li>
+            <br />
+            <li>
+              <el-button
+                @click="() => buyTicketHandler(item)"
+                type="primary"
+                plain
+                >Купить</el-button
+              >
+            </li>
+          </ul>
+        </el-card>
+      </div>
+    </div>
+
+    <!-- Рисуем отели -->
+    <div v-if="step == 'hostel'" class="cardsWrapper">
+      <div class="card" v-for="hostel in serverData" :key="hostel.id">
+        <el-card class="box-card">
+          <ul>
+            <li>
+              <b>{{ hostel.name }}</b>
+            </li>
+            <br />
+            <li>Город: {{ hostel.city }}</li>
+            <br />
+            <li>Цена: {{ hostel.price }} ₽</li>
+            <br />
+
+            <li>
+              <el-button @click="buyHotelHandler" type="primary" plain
+                >Купить</el-button
+              >
+            </li>
+          </ul>
+        </el-card>
+      </div>
+    </div>
+
+    <div v-if="step == 'VISA'" class="cardsWrapper">
+      <el-card class="box-card">
+        <input class="el-input__inner" placeholder="Имя" type="text" />
+        <input class="el-input__inner" placeholder="Фамилия" type="text" />
+        <input class="el-input__inner" placeholder="Телефон" type="text" />
+        <el-button @click="sendVisaHandler" type="primary" plain
+          >Заказать</el-button
+        >
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script>
+import SrvController from "../controllers/srvController";
+const srvController = new SrvController();
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  data() {
+    return {
+      serverData: [],
+      step: "ticket",
+      request: false,
+    };
+  },
+  methods: {
+    buyTicketHandler(ticket) {
+      (async () => {
+        const hostels = await srvController.getHostels(ticket.to);
+        this.step = "hostel";
+        this.serverData = hostels;
+      })();
+    },
+    buyHotelHandler() {
+      this.step = "VISA";
+    },
+    sendVisaHandler() {
+      (async () => {
+        const msg = await srvController.sendBuyerForm();
+        console.log("!!!", msg);
+        this.request = msg;
+      })();
+    },
+  },
+  mounted() {
+    (async () => {
+      const tickets = await srvController.getTickets();
+      this.serverData = tickets.data;
+    })();
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.box-card {
+  width: 400px;
 }
 ul {
-  list-style-type: none;
-  padding: 0;
+  list-style: none;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.cardsWrapper {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 100px;
 }
-a {
-  color: #42b983;
+.card {
+  margin: 50px;
+}
+.el-input__inner {
+  margin-top: 20px;
+}
+.el-button {
+  margin-top: 10px;
 }
 </style>
