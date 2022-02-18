@@ -1,4 +1,4 @@
-export default function crop(url, ref, width = 0, height = 0 ) {
+export default function crop(url, ref, width, height) {
     // мы возвращаем Promise, который разрешается с помощью нашего холста.
     return new Promise(resolve => {
 
@@ -16,8 +16,8 @@ export default function crop(url, ref, width = 0, height = 0 ) {
       
 
             // если он больше, чем целевой коэффициент соотношения сторон.
-            let outputWidth = inputWidth;
-            let outputHeight = inputHeight;
+            let outputWidth = width;
+            let outputHeight = height;
 
             const startPointX = inputWidth/2 - width/2;
             const startPointY = inputHeight/2 - height/2;
@@ -32,7 +32,7 @@ export default function crop(url, ref, width = 0, height = 0 ) {
 
             // нарисуем наше изображение в точках 0, 0 на холсте.
             const ctx = outputImage.getContext('2d');
-            ctx.drawImage(inputImage, startPointX, startPointY, width, height, 0, 0, width, height);
+            ctx.drawImage(inputImage, startPointX, startPointY, width || inputWidth, height || inputHeight, 0, 0, width || inputWidth, height || inputHeight);
             resolve(outputImage);
         };
 

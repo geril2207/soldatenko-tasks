@@ -4,26 +4,23 @@ import './PhotoRedactor.css'
 import crop from "../utils/crop";
 
 export default function PhotoRedactor(props) {
+    const [isAlreadyCroup, setIsAlreadyCrop] = useState(false)
     const canvasRef = useRef(null)
     const cropRef = useRef(null)
     const vuelRef = useRef(null)
+    const imgRef = useRef(null)
 
     const [imageSrc, setImageSrc] = useState(props.imageSrc)
     const [isCrop, setIsCrop] = useState(false)
-    const [cropWidth, setCropWidth] = useState(100)
-    const [cropHeight, setCropHeight] = useState(100)
+    const [cropWidth, setCropWidth] = useState()
+    const [cropHeight, setCropHeight] = useState()
 
-    const [maxHeight, setMaxHeight] = useState(100)
-    const [maxWidth, setMaxWidth] = useState(100)
+    const [maxHeight, setMaxHeight] = useState()
+    const [maxWidth, setMaxWidth] = useState()
 
-    function setCrop(cropCof = cropWidth / cropHeight){
-        console.log(cropCof)
-        crop(imageSrc, canvasRef, cropWidth, cropHeight).then((data) => {
-            setMaxWidth(canvasRef.current.width)
-            setMaxHeight(canvasRef.current.height)
-            setCropHeight(canvasRef.current.height)
-            setCropWidth(canvasRef.current.width)
-        })
+    function setCrop(){
+        setIsAlreadyCrop(true)
+        crop(imageSrc, canvasRef, cropWidth, cropHeight)
     }
 
     function onChangeRange(e) {
@@ -42,14 +39,19 @@ export default function PhotoRedactor(props) {
 
 
     useEffect(() => {
-        setCrop(1)
+        setMaxWidth(imgRef.current.clientWidth)
+        setMaxHeight(imgRef.current.clientHeight)
+        setCropHeight(imgRef.current.clientHeight)
+        setCropWidth(imgRef.current.clientWidth)
+
     }, [])
 
     return (
         <>
             <Card>
                 <div className="redactorSpace">
-                    <canvas className="photoPrevie" ref={canvasRef}></canvas>
+                {isAlreadyCroup &&<canvas className="photoPrevie" ref={canvasRef}></canvas>}
+                    {!isAlreadyCroup && <img ref={imgRef} src={imageSrc} alt="" />}
                     {isCrop && <div className="vuel" ref={vuelRef}>
                         <div ref={cropRef} style={{ width: cropWidth + 'px', height: cropHeight + 'px' }} className="crop"></div>
                     </div>}
