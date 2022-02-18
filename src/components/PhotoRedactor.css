@@ -1,0 +1,24 @@
+.redactorSpace{
+    position: relative;
+}
+
+.vuel{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(1,1,1,0.4);
+    width: 100%;
+    height: 100%;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.crop{
+    border: 2px dashed black;
+    cursor: move;
+
+}

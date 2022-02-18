@@ -9,6 +9,8 @@ function App() {
 
       <body>
         <PhotoOperations/>
+    
+  
       </body> 
     </div>
   );
