@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Card } from "reactstrap"
 import PhotoLoader from './PhotoLoader'
 import PhotoRedactor from "./PhotoRedactor"
@@ -7,6 +7,8 @@ import './PhotoOperations.css'
 export default function PhotoOperations(props){
     const [step, setStep] = useState('Load')
     const [imageSrc, setImageSrc] = useState(false)
+    const fileRef = useRef(null)
+    
 
     let reader = new FileReader();
 
@@ -21,7 +23,7 @@ export default function PhotoOperations(props){
 
     return(
         <Card className="centredCard">
-        {step == 'Load' && <PhotoLoader loadHandler={loadHandler} />}
+        {step == 'Load' && <PhotoLoader fileRef={fileRef} loadHandler={loadHandler} />}
         {imageSrc && <PhotoRedactor imageSrc={imageSrc}/>}
         </Card>
     )

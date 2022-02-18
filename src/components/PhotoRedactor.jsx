@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { Button, ButtonGroup, Card, Input, Label } from "reactstrap";
+import InputModal from './Modal'
 import './PhotoRedactor.css'
 import crop from "../utils/crop";
 
 export default function PhotoRedactor(props) {
-    const [isAlreadyCroup, setIsAlreadyCrop] = useState(false)
     const canvasRef = useRef(null)
-    const cropRef = useRef(null)
-    const vuelRef = useRef(null)
     const imgRef = useRef(null)
 
-    const [imageSrc, setImageSrc] = useState(props.imageSrc)
+    const [isAlreadyCroup, setIsAlreadyCrop] = useState(false)
     const [isCrop, setIsCrop] = useState(false)
+
+    const [isOpenMoadl, setIsOpenMoadl] = useState(false)
+
     const [cropWidth, setCropWidth] = useState()
     const [cropHeight, setCropHeight] = useState()
 
@@ -20,7 +21,7 @@ export default function PhotoRedactor(props) {
 
     function setCrop(){
         setIsAlreadyCrop(true)
-        crop(imageSrc, canvasRef, cropWidth, cropHeight)
+        crop(props.imageSrc, canvasRef, cropWidth, cropHeight)
     }
 
     function onChangeRange(e) {
@@ -36,8 +37,6 @@ export default function PhotoRedactor(props) {
         }
     }
 
-
-
     useEffect(() => {
         setMaxWidth(imgRef.current.clientWidth)
         setMaxHeight(imgRef.current.clientHeight)
@@ -51,18 +50,15 @@ export default function PhotoRedactor(props) {
             <Card>
                 <div className="redactorSpace">
                 {isAlreadyCroup &&<canvas className="photoPrevie" ref={canvasRef}></canvas>}
-                    {!isAlreadyCroup && <img ref={imgRef} src={imageSrc} alt="" />}
-                    {isCrop && <div className="vuel" ref={vuelRef}>
-                        <div ref={cropRef} style={{ width: cropWidth + 'px', height: cropHeight + 'px' }} className="crop"></div>
+                    {!isAlreadyCroup && <img ref={imgRef} src={props.imageSrc} alt="" />}
+                    {isCrop && <div className="vuel">
+                        <div style={{ width: cropWidth + 'px', height: cropHeight + 'px' }} className="crop"></div>
                     </div>}
                 </div>
-
                 <ButtonGroup>
-
                     <Button>Add</Button>
-                    <Button>Remove</Button>
+                    <Button>Rename</Button>
                     <Button onClick={isCrop ? () =>{setCrop();setIsCrop(false)} : () => setIsCrop(true)}>Crop</Button>
-
                 </ButtonGroup>
                 {isCrop && <div>
                     <Label for="width">
@@ -88,6 +84,7 @@ export default function PhotoRedactor(props) {
                         max={maxHeight}
                     />
                 </div>}
+                {isOpenMoadl && <InputModal text='Переименовать' />}
             </Card>
         </>
     )
