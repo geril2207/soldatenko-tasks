@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ArticlesModel;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class ArticlesController extends Controller
 {
@@ -74,6 +76,13 @@ class ArticlesController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    public function addUser(Request $request)
+    {
+        $newUser = ["name" => $request['name'], "password" => Hash::make($request['password']), "email" => $request['email']];
+        User::create($newUser);
+        return response()->json(["message" => 'Успешно добавлено'], 201);
     }
 
     /**

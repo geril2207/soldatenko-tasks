@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IsAdmin
 {
@@ -16,6 +17,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
+        if (Auth::user()->role != 'admin') {
+            return response()->json(["message" => 'Ваша роль не позволяет это сделать'], 402);
+        }
         return $next($request);
     }
 }

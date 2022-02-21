@@ -13,11 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::middleware(['admin'])->group(function () {
+    Route::delete('/articles/{id}/comments/{comment_id}', 'CommentsController@destroy');
+    Route::delete('/articles/{id}', 'ArticlesController@destroy');
+    Route::post('/articles/user/', 'ArticlesController@addUser');
+}); 
 
+Route::apiResource('articles', 'ArticlesController');
 Route::get('/articles/tag/', 'ArticlesController@getArticlesByTag');
 Route::post('/articles/{id}/comments', 'CommentsController@store');
-Route::delete('/articles/{id}/comments/{comment_id}', 'CommentsController@destroy');
-Route::apiResource('articles', 'ArticlesController');
