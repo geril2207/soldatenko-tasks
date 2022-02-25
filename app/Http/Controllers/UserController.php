@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
+        
         return response()->json(["message" => "Json"]);
     }
 

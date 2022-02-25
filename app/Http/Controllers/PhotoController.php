@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PhotoController extends Controller
@@ -16,6 +17,19 @@ class PhotoController extends Controller
         //
     }
 
+
+    public function upload(Request $request)
+    {
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', $token)->first();
+
+        if ($request->hasFile("photo")) {
+            $data["photo"] = $request->file("photo")->getClientOriginalName();
+            $request->file("photo")->move(public_path("/photo/"), $data["imgs"]);
+        }
+        ArticlesModel::create($data);
+        return response()->json(["message" => 'Успешно добавлено'], 201);
+    }
     /**
      * Show the form for creating a new resource.
      *
