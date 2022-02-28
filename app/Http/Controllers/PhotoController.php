@@ -2,97 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
+use App\Models\Share;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function getAllPhotosByUser(Request $request)
     {
-        //
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', '=', $token)->first();
+        $imgsShared = DB::table('photos')->join('share', 'photos.id', '=', 'share.img_id')->select('photos.id', 'url', 'img_name', 'photos.owner_id')->get();
+        $imgs = Photo::where('owner_id', '=', $user->id)->select('id', 'url', 'img_name', 'owner_id')->get();
+        $result = collect([$imgs, $imgsShared])->collapse()->all();
+        return response()->json(["data" => $result]);
     }
 
+    public function getPhotoById($id)
+    {
+        $imgs = Photo::where('id', '=', $id)->select('id', 'url', 'img_name', 'owner_id')->first();
+        return response()->json(["data" => $imgs]);
+    }
+
+    public function deletePhoto(Request $request, $id)
+    {
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', '=', $token)->first();
+        $img = Photo::where('id', '=', $id)->first();
+        if ($img->owner_id !== $user->id) {
+            return response()->json(["success" => false, "message" => "Доступ запрещен"], 403);
+        }
+        $img->delete();
+        return response()->json(["success" => true, "message" => "Успешно удалено"], 204);
+    }
 
     public function upload(Request $request)
     {
         $token = $request->bearerToken();
         $user = User::where('remember_token', $token)->first();
-
+        $folder_name = $user->folder_name;
         if ($request->hasFile("photo")) {
-            $data["photo"] = $request->file("photo")->getClientOriginalName();
-            $request->file("photo")->move(public_path("/photo/"), $data["imgs"]);
+            $img_name = $request->file("photo")->getClientOriginalName();
+            $img_real_name = explode('.', $img_name);
+            $img_real_name = time() . '.' . end($img_real_name);
+            Storage::disk('private')->putFileAs("$folder_name/", $request->file('photo'),  $img_real_name);
+            $newPhoto = Photo::create(["url" => "$folder_name/$img_real_name", "img_real_name" => $img_real_name, "img_name" => $img_name, "owner_id" => $user->id]);
+            return response()->json(["message" => 'Успешно добавлено', "data" => ["id" => $newPhoto->id, "name" => $newPhoto->img_name, "url" => $newPhoto->url]], 201);
         }
-        ArticlesModel::create($data);
-        return response()->json(["message" => 'Успешно добавлено'], 201);
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', $token)->first();
+        $user_folder = $user->folder_name;
+        $currentPhoto = Photo::where('id', $id)->first();
+        if ($currentPhoto->owner_id !== $user->id) {
+            return response()->json(["success" => false, "message" => "Ошибка доступа"], 403);
+        }
+        if ($request->hasFile("photo")) {
+            Storage::disk('private')->putFileAs("$user_folder/", $request->file('photo'),  $currentPhoto->img_real_name);
+            if (isset($request["name"])) {
+                $currentPhoto->img_name = $request["name"];
+                $currentPhoto->save();
+            }
+            return response()->json(["success" => true, "message" => "Успешно обновлено", "data" => ["id" => $currentPhoto->id, "name" => $currentPhoto->img_name, "url" => $currentPhoto->url]], 200);
+        }
     }
 }

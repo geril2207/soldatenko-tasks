@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -17,7 +18,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        
+
         return response()->json(["message" => "Json"]);
     }
 
@@ -33,7 +34,8 @@ class UserController extends Controller
         if (isset($user->phone)) {
             return response()->json(["success" => false, "message" => "Пользователь с таким телефоном уже существует"], 402);
         }
-        $newUser = User::create(["phone" => $request["phone"], "firstname" => $request["firstname"], "surname" => $request["surname"], "password" => Hash::make($request["password"])]);
+        $newUser = User::create(["phone" => $request["phone"], "firstname" => $request["firstname"], "surname" => $request["surname"], "password" => Hash::make($request["password"]), "folder_name" => time()]);
+        Storage::disk('private')->makeDirectory($newUser->folder_name);
         return response()->json(["success" => true, "message" => "Пользователь успешно создан", "data" => ["id" => $newUser->id]], 201);
     }
 

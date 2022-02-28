@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('firstname');
             $table->string('surname');
+            $table->string('folder_name');
             $table->string('phone')->unique();
             $table->string('password');
             $table->rememberToken();
