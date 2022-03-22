@@ -72,4 +72,19 @@ class PhotoController extends Controller
             return response()->json(["success" => true, "message" => "Успешно обновлено", "data" => ["id" => $currentPhoto->id, "name" => $currentPhoto->img_name, "url" => $currentPhoto->url]], 200);
         }
     }
+
+    public function share(Request $request, $id)
+    {
+        $res = [];
+        foreach ($request["photos"] as $key => $value) {
+            $existing_img = DB::table('share')->where('img_id', $value)->first();
+            if ($existing_img == null) {
+                DB::table('share')->insert([
+                    "img_id" => $value,
+                    "user_id" => $id
+                ]);
+            }
+        }
+        return response()->json(["hello world" => "hello world", "id" => $id]);
+    }
 }
