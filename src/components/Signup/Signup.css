@@ -1,0 +1,14 @@
+.centredForm {
+  width: 900px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.center__wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}

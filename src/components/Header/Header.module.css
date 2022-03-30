@@ -1,0 +1,41 @@
+.wrapper {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #0d6efd;
+  padding: 15px 0;
+}
+
+.container {
+  color: white;
+  font-size: 24px;
+}
+
+.header_info_popup {
+  font-size: 18px;
+  color: black;
+  border-radius: 15px;
+  padding: 10px 0;
+  cursor: pointer;
+  box-shadow: 0px 0px 4px rgb(15, 15, 15);
+  background: white;
+}
+.header_info_popup_active {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  transform: translateY(0px);
+}
+
+.logout {
+  cursor: pointer;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+}
+.link:hover {
+  color: white !important;
+}

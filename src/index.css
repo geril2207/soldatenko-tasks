@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +15,47 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+.message_wrapper {
+  position: absolute !important;
+  top: 10% !important;
+  left: 50% !important;
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, -10px);
+  animation: messageAnim 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@keyframes messageAnim {
+  0% {
+    transform: translate(-50%, -10px);
+    opacity: 0;
+    visibility: hidden;
+  }
+  30% {
+    transform: translate(-50%, 0px);
+    opacity: 1;
+    visibility: visible;
+  }
+  80% {
+    transform: translate(-50%, 0px);
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    transform: translate(-50%, -10px);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.error_message {
+  border: 2px solid red;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 15px;
+  margin: 0 auto;
 }

@@ -1,38 +1,50 @@
-import './App.css';
-import Registration from './components/Registration'
-import Autorization from './components/Autorization'
-import PhotoOperations from './components/PhotoOperations'
+import './App.css'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
-  Link
-} from "react-router-dom";
+} from 'react-router-dom'
+import { privateRoutes, publicRoutes } from './navigation'
+import { Layout } from './components'
+
+
 
 function App() {
+  const token = localStorage.getItem('token')
   return (
     <Router>
       <div className="App">
-
-        <body>
+        {token ? (
           <Switch>
-            <Route path="/photo">
-              <PhotoOperations />
-            </Route>
-            <Route path="/register">
-              <Registration />
-            </Route>
-            <Route path="/auth">
-              <Autorization />
-            </Route>
-            <Redirect to="/auth"/>
+            {privateRoutes.map((route, index) => (
+              <Route
+                path={route.path}
+                exact={route.exact}
+                key={`${route.path}_${index}`}
+              >
+                <Layout isHeader={route.isHeader} component={route.component} />
+              </Route>
+            ))}
+            <Redirect to="/photoList" />
           </Switch>
-
-        </body>
+        ) : (
+          <Switch>
+            {publicRoutes.map((route, index) => (
+              <Route
+                path={route.path}
+                exact={route.exact}
+                key={`${route.path}_${index}`}
+              >
+                <Layout isHeader={route.isHeader} component={route.component} />
+              </Route>
+            ))}
+            <Redirect to="/login" />
+          </Switch>
+        )}
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
