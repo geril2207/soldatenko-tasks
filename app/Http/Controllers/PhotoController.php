@@ -15,10 +15,11 @@ class PhotoController extends Controller
     {
         $token = $request->bearerToken();
         $user = User::where('remember_token', '=', $token)->first();
-        $imgsShared = DB::table('photos')->join('share', 'photos.id', '=', 'share.img_id')->select('photos.id', 'url', 'img_name', 'photos.owner_id')->get();
+        // $imgsShared = DB::table('photos')->join('share', 'photos.id', '=', 'share.img_id')->select('photos.id', 'url', 'img_name', 'photos.owner_id')->get();
+        $imgsShared = DB::table('share')->where('user_id', $user->id)->join('photos', 'share.img_id', '=', 'photos.id')->get();
         $imgs = Photo::where('owner_id', '=', $user->id)->select('id', 'url', 'img_name', 'owner_id')->get();
-        $result = collect([$imgs, $imgsShared])->collapse()->all();
-        return response()->json(["data" => $result]);
+        // $result = collect([$imgs, $imgsShared])->collapse()->all();
+        return response()->json(["self_photos" => $imgs, "shared_photos" => $imgsShared, "id" => $user->id]);
     }
 
     public function getPhotoById($id)

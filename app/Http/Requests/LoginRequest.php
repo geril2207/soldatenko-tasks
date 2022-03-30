@@ -26,6 +26,6 @@ class LoginRequest extends FormRequest
             'success'   => false,
             'message'   => 'Ошибка валидации',
             'data'      => $validator->errors()
-        ]), 422);
+        ], 422));
     }
 }

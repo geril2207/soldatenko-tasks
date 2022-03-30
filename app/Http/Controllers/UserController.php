@@ -22,6 +22,14 @@ class UserController extends Controller
         return response()->json(["message" => "Json"]);
     }
 
+
+    public function info(Request $request)
+    {
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', $token)->select('firstname', 'surname')->first();
+        return response()->json(["success" => true, "data" => $user]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -53,6 +61,8 @@ class UserController extends Controller
             $user->remember_token = $token;
             $user->save();
             return response()->json(["success" => true, "message" => "Авторизация прошла успешно", "data" => ["token" => $user["remember_token"]]]);
+        } else {
+            return response()->json(["success" => false, "message" => "Пароль неверный"], 404);
         }
     }
 

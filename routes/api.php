@@ -21,6 +21,7 @@ Route::post('/user/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => 'tokenAuth'], function () {
     Route::get('/user', [UserController::class, 'search']);
+    Route::get('/user/info', [UserController::class, 'info']);
     Route::post('/user/{id}/share', [PhotoController::class, 'share']);
     Route::post('/photo', [PhotoController::class, 'upload']);
     Route::get('/photo', [PhotoController::class, 'getAllPhotosByUser']);
