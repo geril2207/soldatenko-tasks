@@ -1,3 +1,7 @@
+:root {
+  --main-blue-color: #0d6efd;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -58,4 +62,75 @@ code {
   max-width: 1200px;
   padding: 0 15px;
   margin: 0 auto;
+}
+
+.lds-dual-ring {
+  display: block;
+  margin: 0 auto;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: ' ';
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid var(--main-blue-color);
+  border-color: var(--main-blue-color) transparent var(--main-blue-color)
+    transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.list__grid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  gap: 15px;
+}
+
+.list_item {
+  position: relative;
+  width: 30%;
+}
+
+.list_item:hover .list_item_btns {
+  z-index: 1;
+  background: rgba(48, 46, 46, 0.348);
+}
+
+.list_item_btns {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.15s linear;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: -1;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.list_item_btns {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 5px;
+}
+
+.list_item img {
+  width: 100%;
+  height: 250px;
 }

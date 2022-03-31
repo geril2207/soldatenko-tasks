@@ -44,7 +44,8 @@ export default function Signup() {
           message: 'Пользователь успешно создан',
         })
       },
-      onError() {
+      onError(error) {
+        console.log(error)
         setMessageCondition(true)
         setMessageState({
           type: 'error',

@@ -21,8 +21,23 @@ export default function PhotoRedactor(props) {
 
   function setCrop() {
     setIsAlreadyCrop(true)
-    crop(props.imageSrc, canvasRef, cropWidth, cropHeight)
+    crop(props.imageSrc, canvasRef, cropWidth, cropHeight).then((img) =>
+      console.log(
+        img.toBlob(function (blob) {
+          console.log(blob)
+          const url = URL.createObjectURL(blob)
+          console.log(url)
+          return URL.revokeObjectURL(url)
+        })
+      )
+    )
   }
+
+  useEffect(() => {
+    if (canvasRef.current) {
+      console.log(canvasRef.current.toDataURL())
+    }
+  }, [canvasRef])
 
   function onChangeRange(e) {
     switch (e.target.name) {
@@ -46,7 +61,7 @@ export default function PhotoRedactor(props) {
 
   return (
     <>
-      <Card>
+      <Card className="mt-4">
         <div className="redactorSpace">
           {isAlreadyCroup && (
             <canvas className="photoPrevie" ref={canvasRef}></canvas>
@@ -62,9 +77,8 @@ export default function PhotoRedactor(props) {
           )}
         </div>
         <ButtonGroup>
-          <Button>Add</Button>
-          <Button>Rename</Button>
           <Button
+            color="primary"
             onClick={
               isCrop
                 ? () => {
@@ -74,7 +88,10 @@ export default function PhotoRedactor(props) {
                 : () => setIsCrop(true)
             }
           >
-            Crop
+            Обрезать
+          </Button>
+          <Button onClick={props.submitHandler} color="success">
+            Сохранить
           </Button>
         </ButtonGroup>
         {isCrop && (
