@@ -1,7 +1,3 @@
-import { PixelCrop } from 'react-image-crop'
-
-const TO_RADIANS = Math.PI / 180
-
 export async function canvasPreview(image, canvas, crop, scale = 1) {
   const ctx = canvas.getContext('2d')
 
@@ -52,6 +48,5 @@ export async function canvasPreview(image, canvas, crop, scale = 1) {
     image.naturalWidth,
     image.naturalHeight
   )
-
   ctx.restore()
 }

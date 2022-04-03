@@ -104,8 +104,14 @@ code {
   width: 30%;
 }
 
+.list_item img {
+  width: 100%;
+  height: 190px;
+}
+
 .list_item:hover .list_item_btns {
   z-index: 1;
+  opacity: 1;
   background: rgba(48, 46, 46, 0.348);
 }
 
@@ -115,6 +121,7 @@ code {
   left: 0;
   transition: all 0.15s linear;
   width: 100%;
+  opacity: 0;
   height: 100%;
   display: flex;
   z-index: -1;
@@ -123,6 +130,27 @@ code {
   background: transparent;
 }
 
+.delete__modal_btns {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.list_item_btns div {
+  font-size: 24px;
+  color: white;
+}
+.list_item_btns div span {
+  font-weight: bold;
+}
+.delete_modal_title {
+  font-size: 24px;
+}
+.delete_modal_title span {
+  font-weight: bold;
+}
 .list_item_btns {
   display: flex;
   flex-direction: column;
@@ -130,7 +158,15 @@ code {
   gap: 5px;
 }
 
-.list_item img {
+.photored {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+.photored__btn {
   width: 100%;
-  height: 250px;
+  max-width: 200px;
+  margin-top: 30px;
 }

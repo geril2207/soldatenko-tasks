@@ -6,7 +6,6 @@ import './PhotoOperations.css'
 import { useMutation, useQueryClient } from 'react-query'
 import { PhotoService } from '../../services/photo.service'
 import { useParams } from 'react-router-dom'
-import { usePhotoById } from '../../hooks/usePhotoById'
 import { STORAGE_URL } from '../../utils/api_helper'
 
 export default function PhotoOperations(props) {
@@ -17,15 +16,8 @@ export default function PhotoOperations(props) {
   const [titleInput, setTitleInput] = useState('')
   const { id: imgId } = useParams()
 
-  const { data: response, isLoading } = usePhotoById(imgId)
-  console.log(response)
-  useEffect(() => {
-    if (response && !imageSrc) {
-      setImageSrc(`${STORAGE_URL}${response.data.data.url}`)
-      setTitleInput(response.data.data.img_name)
-    }
-  }, [response])
-
+  const response = null
+  const isLoading = null
   let reader = new FileReader()
 
   function loadHandler(e) {

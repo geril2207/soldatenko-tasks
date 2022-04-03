@@ -8,7 +8,6 @@ import {
   Input,
   Label,
   Button,
-  Alert,
 } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { useForm } from '../../hooks/useForm'
@@ -16,6 +15,7 @@ import { useMutation } from 'react-query'
 import { UserService } from '../../services/user.service'
 import { useMessageCondition } from '../../hooks/useMessageCondition'
 import { useState } from 'react'
+import CustomAllert from '../Alert/Alert'
 
 export default function Login() {
   const [form, setFormState] = useForm({
@@ -50,14 +50,11 @@ export default function Login() {
   }
   return (
     <div className="center__wrapper">
-      {messageCondition && (
-        <Alert
-          className="message_wrapper"
-          color={`${messageState.type === 'error' ? 'danger' : 'success'}`}
-        >
-          {messageState.message}
-        </Alert>
-      )}
+      <CustomAllert
+        condition={messageCondition}
+        type={messageState.type}
+        message={messageState.message}
+      />
       <Card className="centredForm">
         <CardHeader>
           <h5>Авторизация</h5>

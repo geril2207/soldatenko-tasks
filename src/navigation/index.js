@@ -16,7 +16,7 @@ export const privateRoutes = [
   { path: '/photoList', component: PhotoList, exact: true, isHeader: true },
   {
     path: '/photo/:id',
-    component: PhotoOperationsVone,
+    component: PhotoRedactor,
     exact: false,
     isHeader: true,
   },

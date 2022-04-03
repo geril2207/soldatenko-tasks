@@ -1,14 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { UserService } from '../../services/user.service'
 import styles from './Header.module.css'
 
 const Header = () => {
-  const { data: response, isLoading } = useQuery(
-    'user info',
-    UserService.getUserInfo
-  )
+  const {
+    data: response,
+    isLoading,
+    refetch,
+  } = useQuery('user info', UserService.getUserInfo, { enabled: false })
+
+  useEffect(() => {
+    if (!response) {
+      refetch()
+    }
+  }, [])
+
   const firstname = response?.data?.data?.firstname
   const surname = response?.data?.data?.surname
   const displayName =
