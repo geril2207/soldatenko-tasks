@@ -51,7 +51,7 @@ class PhotoController extends Controller
             $img_real_name = time() . '.' . end($img_real_name);
             Storage::disk('private')->putFileAs("$folder_name/", $request->file('photo'),  $img_real_name);
             $newPhoto = Photo::create(["url" => "$folder_name/$img_real_name", "img_real_name" => $img_real_name, "img_name" => "Untitled", "owner_id" => $user->id]);
-            return response()->json(["message" => 'Успешно добавлено', "data" => ["id" => $newPhoto->id, "name" => $newPhoto->img_name, "url" => $newPhoto->url]], 201);
+            return response()->json(["message" => 'Успешно добавлено', "data" => ["id" => $newPhoto->id, "img_name" => $newPhoto->img_name, "url" => $newPhoto->url]], 201);
         }
     }
 
@@ -70,7 +70,7 @@ class PhotoController extends Controller
                 $currentPhoto->img_name = $request["name"];
                 $currentPhoto->save();
             }
-            return response()->json(["success" => true, "message" => "Успешно обновлено", "data" => ["id" => $currentPhoto->id, "name" => $currentPhoto->img_name, "url" => $currentPhoto->url]], 200);
+            return response()->json(["success" => true, "message" => "Успешно обновлено", "data" => ["id" => $currentPhoto->id, "img_name" => $currentPhoto->img_name, "url" => $currentPhoto->url]], 200);
         }
     }
 
