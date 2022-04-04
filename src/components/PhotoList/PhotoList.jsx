@@ -54,6 +54,10 @@ const PhotoList = () => {
     })
   }
 
+  if (isLoading || isRefetching) {
+    return <div className="lds-dual-ring loader"></div>
+  }
+
   return (
     <div className="container">
       <div className="head d-flex justify-content-between mt-5">

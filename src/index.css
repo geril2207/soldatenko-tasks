@@ -170,3 +170,8 @@ code {
   max-width: 200px;
   margin-top: 30px;
 }
+
+.loader {
+  margin-top: 150px;
+  transform: translateX(30px);
+}

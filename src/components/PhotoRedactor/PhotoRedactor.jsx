@@ -56,6 +56,7 @@ const PhotoRedactor = ({ history }) => {
     data: response,
     isLoading,
     isError,
+    isRefetching,
   } = useQuery(['photo', +imgId], () => PhotoService.getPhotoById(imgId), {
     enabled: !!imgId,
   })
@@ -72,7 +73,7 @@ const PhotoRedactor = ({ history }) => {
   )
 
   useEffect(() => {
-    if (response?.data?.data) {
+    if (response?.data?.data && imgId) {
       setImgSrc(`${STORAGE_URL}${response.data.data.url}`)
       setImgTitle(response.data.data.img_name)
     }
@@ -140,10 +141,19 @@ const PhotoRedactor = ({ history }) => {
     return PhotoService.uploadPhoto(formData)
   }
 
+  if (isLoading || isRefetching) {
+    return (
+      <div className="photored">
+        <h2>{imgId ? 'Редактирование' : 'Загрузка'} изображения</h2>
+        <div className="lds-dual-ring loader mt-4"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="photored">
-      <h2>Загрузка изображения на сервер</h2>
-      {isLoading && <div className="lds-dual-ring"></div>}
+      <h2>{imgId ? 'Редактирование' : 'Загрузка'} изображения</h2>
+      
       {isError && <div>Ошибка загрузки. Попробуйте перезагрузить страницу</div>}
       {!imgId && (
         <Input
@@ -235,6 +245,7 @@ const PhotoRedactor = ({ history }) => {
         <Button
           className="photored__btn"
           color="primary"
+          disabled={!completedCrop}
           onClick={mutation.mutateAsync}
         >
           Сохранить
