@@ -7,6 +7,7 @@ import { useMessageCondition } from '../../hooks/useMessageCondition'
 import { PhotoService } from '../../services/photo.service'
 import { API_URL, STORAGE_URL } from '../../utils/api_helper'
 import PhotoDeleteModal from './PhotoDeleteModal'
+import PhotoListItem from './PhotoListItem'
 
 const PhotoList = () => {
   const [messageCondition, setMessageCondition] = useMessageCondition()
@@ -15,6 +16,38 @@ const PhotoList = () => {
     type: '',
     message: '',
   })
+
+  const [selectPhoto, setSelectPhoto] = useState({
+    isSelect: false,
+    selectedPhotos: [],
+    selectedUser: '',
+  })
+
+  const selectAllHandler = (type, value, event = null) => {
+    if (type === 'isSelect') {
+      return setSelectPhoto((prevState) => ({ ...prevState, isSelect: value }))
+    }
+    if (type === 'selectedPhotos') {
+      const elementIndex = selectPhoto.selectedPhotos.indexOf(value)
+      if (elementIndex === -1) {
+        return setSelectPhoto((prevState) => {
+          console.log(1)
+          prevState.selectedPhotos.push(value)
+          return {
+            ...prevState,
+          }
+        })
+      }
+
+      return setSelectPhoto((prevState) => {
+        prevState.selectedPhotos.splice(elementIndex, elementIndex + 1)
+        return { ...prevState }
+      })
+    }
+  }
+
+  console.log(selectPhoto)
+
   const [deleteModal, setDeleteModal] = useState({
     condition: false,
     title: null,
@@ -64,9 +97,28 @@ const PhotoList = () => {
         <div>
           <h4>Список фотографий</h4>
         </div>
-        <Link to={'/photo/'}>
-          <Button color="primary">Добавить фотографию</Button>
-        </Link>
+        <div className="d-flex align-items-stretch">
+          <Button
+            color="primary"
+            className="d-flex justify-content-center align-items-center text-white me-2"
+          >
+            <svg
+              stroke="currentColor"
+              fill="currentColor"
+              strokeWidth="0"
+              viewBox="0 0 16 16"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"></path>
+            </svg>
+          </Button>
+
+          <Link to={'/photo/'}>
+            <Button color="primary">Добавить фотографию</Button>
+          </Link>
+        </div>
       </div>
       <div className="list__grid mt-3">
         {(isLoading || isRefetching) && <div className="lds-dual-ring"></div>}
@@ -76,26 +128,12 @@ const PhotoList = () => {
         {!isRefetching &&
           response?.data?.self_photos &&
           response?.data?.self_photos.map((item, index) => (
-            <div className="list_item" key={`${item.url}_${index}`}>
-              <img src={`${STORAGE_URL}${item.url}`} alt="Картинка" />
-              <div className="list_item_btns">
-                <div>
-                  Фотография <br />
-                  <span>{item.img_name}</span>
-                </div>
-                <Link to={`/photo/${item.id}`}>
-                  <Button color="primary">Редактировать</Button>
-                </Link>
-                <Button
-                  color="danger"
-                  onClick={() =>
-                    selectDeleteHandler(true, item.id, item.img_name)
-                  }
-                >
-                  Удалить
-                </Button>
-              </div>
-            </div>
+            <PhotoListItem
+              key={`${item.url}_${index}`}
+              item={item}
+              deleteHandler={selectDeleteHandler}
+              selectHandler={selectAllHandler}
+            />
           ))}
       </div>
       <div className="mt-4">

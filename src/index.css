@@ -112,14 +112,16 @@ code {
 .list_item:hover .list_item_btns {
   z-index: 1;
   opacity: 1;
-  background: rgba(48, 46, 46, 0.348);
+  background: rgba(48, 46, 46, 0.853);
 }
-
+.list_item_select:hover .list_item_btns {
+  display: none;
+}
 .list_item_btns {
   position: absolute;
   top: 0;
   left: 0;
-  transition: all 0.15s linear;
+  transition: all 0.2s linear;
   width: 100%;
   opacity: 0;
   height: 100%;
@@ -128,6 +130,13 @@ code {
   justify-content: center;
   align-items: center;
   background: transparent;
+}
+
+.list_item_select_check {
+  position: absolute;
+  right: 15px;
+  width: 20px !important;
+  height: 20px !important;
 }
 
 .delete__modal_btns {
