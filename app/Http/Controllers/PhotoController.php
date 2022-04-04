@@ -36,6 +36,9 @@ class PhotoController extends Controller
         if ($img->owner_id !== $user->id) {
             return response()->json(["success" => false, "message" => "Доступ запрещен"], 403);
         }
+        $folder_name = $user->folder_name;
+        $img_real_name = $img->img_real_name;
+        Storage::disk('private')->delete("$folder_name/$img_real_name");
         $img->delete();
         return response()->json(["success" => true, "message" => "Успешно удалено"], 204);
     }
