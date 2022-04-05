@@ -35,6 +35,13 @@ const PhotoList = () => {
 
   const selectAllHandler = (type, value = !selectPhoto.isSelect) => {
     if (type === 'isSelect') {
+      if (selectPhoto.isSelect) {
+        return setSelectPhoto((prevState) => ({
+          ...prevState,
+          selectedPhotos: [],
+          isSelect: value,
+        }))
+      }
       return setSelectPhoto((prevState) => ({ ...prevState, isSelect: value }))
     }
     if (type === 'selectedPhotos') {
