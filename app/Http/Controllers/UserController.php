@@ -77,14 +77,11 @@ class UserController extends Controller
         $token = $request->bearerToken();
         $user = User::where('remember_token', '=', $token)->first();
         if (isset($searchStr)) {
-            $users = User::select('id', 'firstname', 'surname', 'phone')->where('firstname', 'LIKE', "%{$searchStr}%")->orWhere('surname', 'LIKE', "%{$searchStr}%")->orWhere('phone', 'LIKE', "%{$searchStr}%")->get();
-            foreach ($users as $key => $item) {
-                if ($item->id == $user->id) {
-                    unset($users[$key]);
-                    break;
-                }
-            }
+            $users = User::select('id', 'firstname', 'surname', 'phone')->where('id', '!=', $user->id)->where(function ($query) use ($searchStr) {
+                $query->where('firstname', 'LIKE', "%{$searchStr}%")->orWhere('surname', 'LIKE', "%{$searchStr}%")->orWhere('phone', 'LIKE', "%{$searchStr}%");
+            })->get();
             return response()->json(["success" => true, "data" => $users], 200);
         }
+        return response()->json(["success" => true, "data" => []], 200);
     }
 }
