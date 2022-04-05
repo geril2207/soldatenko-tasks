@@ -120,6 +120,7 @@ const PhotoList = () => {
             color={`${selectPhoto.isSelect ? 'danger' : 'primary'}`}
             className="d-flex justify-content-center align-items-center text-white me-3"
             onClick={() => selectAllHandler('isSelect')}
+            disabled={!response?.data?.self_photos.length}
           >
             {selectPhoto.isSelect ? (
               'Отмена'
@@ -141,6 +142,7 @@ const PhotoList = () => {
             <Button
               className="me-3"
               color="success"
+              disabled={!selectPhoto.selectedPhotos.length}
               onClick={() => setUserModal(true)}
             >
               Поделиться
