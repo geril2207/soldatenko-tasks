@@ -24,6 +24,15 @@ const PhotoList = () => {
     selectedUser: '',
   })
 
+  const mutation = useMutation('share photos', sharePhotosHandler, {
+    onSuccess() {
+      alert('Успех')
+    },
+    onError() {
+      alert('Ошибка')
+    },
+  })
+
   const selectAllHandler = (type, value = !selectPhoto.isSelect) => {
     if (type === 'isSelect') {
       return setSelectPhoto((prevState) => ({ ...prevState, isSelect: value }))
@@ -45,11 +54,16 @@ const PhotoList = () => {
     }
   }
 
+  function sharePhotosHandler(userId) {
+    return PhotoService.sharePhoto(userId, selectPhoto.selectedPhotos)
+  }
+
   const [deleteModal, setDeleteModal] = useState({
     condition: false,
     title: null,
     id: -1,
   })
+  const [userModal, setUserModal] = useState(false)
   const queryClient = useQueryClient()
   const {
     data: response,
@@ -117,7 +131,11 @@ const PhotoList = () => {
             )}
           </Button>
           {selectPhoto.isSelect && (
-            <Button className="me-3" color="success">
+            <Button
+              className="me-3"
+              color="success"
+              onClick={() => setUserModal(true)}
+            >
               Поделиться
             </Button>
           )}
@@ -169,7 +187,11 @@ const PhotoList = () => {
         closeHandler={selectDeleteHandler}
         deleteHandler={mutateAsync}
       />
-      <PhotoSearchUserModal />
+      <PhotoSearchUserModal
+        active={userModal}
+        submitHandler={mutation.mutateAsync}
+        closeHandler={() => setUserModal(false)}
+      />
     </div>
   )
 }

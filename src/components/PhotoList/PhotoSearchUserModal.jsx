@@ -13,34 +13,27 @@ import {
 import { useDebounceEffect } from '../../hooks/useDebounce'
 import { UserService } from '../../services/user.service'
 
-const PhotoSearchUserModal = ({ active }) => {
+const PhotoSearchUserModal = ({ active, submitHandler, closeHandler }) => {
   const [searchInput, setSearchInput] = useState('')
-  const [usersList, setUsersList] = useState([])
+  const [selectedUser, setSelectedUser] = useState(null)
   const {
-    data: response,
-    isLoading,
+    data: response = null,
     isError,
-    isRefetching,
     refetch,
   } = useQuery('user search', () => UserService.findUser(searchInput), {
     enabled: false,
   })
   useDebounceEffect(
     () => {
-      refetch()
+      if (searchInput !== '') {
+        refetch()
+      }
     },
-    200,
+    0,
     [searchInput]
   )
-  useEffect(() => {
-    if (response?.data?.data) {
-      console.log(response.data.data)
-      setUsersList(response.data.data)
-    }
-  }, [response?.data?.data])
-  console.log(isLoading, isRefetching, usersList.length, searchInput)
   return (
-    <Modal isOpen={true} centered>
+    <Modal isOpen={active} centered toggle={closeHandler}>
       <Card>
         <CardBody className="p-4">
           <h5 className="text-center">
@@ -49,19 +42,28 @@ const PhotoSearchUserModal = ({ active }) => {
           <Input
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Введите данные пользователя"
           />
-          {!usersList.length &&
-            (!isLoading || !isRefetching) &&
-            !!searchInput && (
-              <DropdownItem>По вашему запросу ничего не найдено</DropdownItem>
-            )}
-          {!!usersList.length && (
-            <Dropdown isOpen={true}>
-              <DropdownMenu className="w-100">
-                {usersList.map((item, index) => (
+          <Dropdown
+            toggle={() => undefined}
+            isOpen={!!searchInput}
+            className="userlist__dropdown"
+          >
+            <DropdownMenu className="w-100">
+              {isError && (
+                <DropdownItem>
+                  Что-то пошло не так. Попробуйте перезагрузить страницу
+                </DropdownItem>
+              )}
+              {!response?.data?.data.length && !!searchInput && (
+                <DropdownItem>По вашему запросу ничего не найдено</DropdownItem>
+              )}
+              {!!response?.data?.data.length &&
+                response?.data?.data.map((item, index) => (
                   <DropdownItem
                     key={`${item.id}_${index}`}
-                    className="d-flex align-items-center justify-content-between"
+                    className="d-flex align-items-center justify-content-between }"
+                    onClick={() => setSelectedUser(item.id)}
                   >
                     <div className="d-flex align-items-center">
                       <svg
@@ -78,15 +80,23 @@ const PhotoSearchUserModal = ({ active }) => {
                       </svg>
                       <div>{`${item.firstname} ${item.surname} ${item.phone}`}</div>
                     </div>
-                    <div className="btn btn-primary btn-sm">Выбрать</div>
                   </DropdownItem>
                 ))}
-              </DropdownMenu>
-            </Dropdown>
-          )}
-          <Button color="primary" className="text-center">
-            Отмена
-          </Button>
+            </DropdownMenu>
+          </Dropdown>
+          <div className="text-end w-100">
+            <Button className="text-center me-3" onClick={closeHandler}>
+              Отмена
+            </Button>
+            <Button
+              color="primary"
+              className="text-center"
+              style={{ width: '200px' }}
+              onClick={() => submitHandler(selectedUser)}
+            >
+              Поделиться
+            </Button>
+          </div>
         </CardBody>
       </Card>
     </Modal>

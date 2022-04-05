@@ -184,3 +184,12 @@ code {
   margin-top: 150px;
   transform: translateX(30px);
 }
+
+.userlist__dropdown {
+  height: 250px;
+  overflow: auto;
+}
+
+.userlist__dropdown_item_active {
+  border: 1px solid var(--main-blue-color);
+}

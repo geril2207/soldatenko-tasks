@@ -17,4 +17,7 @@ export const PhotoService = {
   uploadPhoto(photo) {
     return axiosApi.post(`${API_URL}/photo`, photo)
   },
+  sharePhoto(id, photos) {
+    return axiosApi.post(`${API_URL}/user/${id}/share`, { photos })
+  },
 }
