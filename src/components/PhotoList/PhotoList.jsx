@@ -8,6 +8,7 @@ import { PhotoService } from '../../services/photo.service'
 import { API_URL, STORAGE_URL } from '../../utils/api_helper'
 import PhotoDeleteModal from './PhotoDeleteModal'
 import PhotoListItem from './PhotoListItem'
+import PhotoSearchUserModal from './PhotoSearchUserModal'
 
 const PhotoList = () => {
   const [messageCondition, setMessageCondition] = useMessageCondition()
@@ -23,7 +24,7 @@ const PhotoList = () => {
     selectedUser: '',
   })
 
-  const selectAllHandler = (type, value, event = null) => {
+  const selectAllHandler = (type, value = !selectPhoto.isSelect) => {
     if (type === 'isSelect') {
       return setSelectPhoto((prevState) => ({ ...prevState, isSelect: value }))
     }
@@ -31,22 +32,18 @@ const PhotoList = () => {
       const elementIndex = selectPhoto.selectedPhotos.indexOf(value)
       if (elementIndex === -1) {
         return setSelectPhoto((prevState) => {
-          console.log(1)
-          prevState.selectedPhotos.push(value)
-          return {
-            ...prevState,
-          }
+          const newItems = [...prevState.selectedPhotos]
+          newItems.push(value)
+          return { ...prevState, selectedPhotos: newItems }
         })
       }
-
       return setSelectPhoto((prevState) => {
-        prevState.selectedPhotos.splice(elementIndex, elementIndex + 1)
-        return { ...prevState }
+        let newItems = [...prevState.selectedPhotos]
+        newItems = newItems.filter((item) => item !== value)
+        return { ...prevState, selectedPhotos: newItems }
       })
     }
   }
-
-  console.log(selectPhoto)
 
   const [deleteModal, setDeleteModal] = useState({
     condition: false,
@@ -99,28 +96,38 @@ const PhotoList = () => {
         </div>
         <div className="d-flex align-items-stretch">
           <Button
-            color="primary"
-            className="d-flex justify-content-center align-items-center text-white me-2"
+            color={`${selectPhoto.isSelect ? 'danger' : 'primary'}`}
+            className="d-flex justify-content-center align-items-center text-white me-3"
+            onClick={() => selectAllHandler('isSelect')}
           >
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              viewBox="0 0 16 16"
-              height="1em"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"></path>
-            </svg>
+            {selectPhoto.isSelect ? (
+              'Отмена'
+            ) : (
+              <svg
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 16 16"
+                height="1em"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"></path>
+              </svg>
+            )}
           </Button>
+          {selectPhoto.isSelect && (
+            <Button className="me-3" color="success">
+              Поделиться
+            </Button>
+          )}
 
           <Link to={'/photo/'}>
             <Button color="primary">Добавить фотографию</Button>
           </Link>
         </div>
       </div>
-      <div className="list__grid mt-3">
+      <div className="list__grid mt-3 justify-content-between">
         {(isLoading || isRefetching) && <div className="lds-dual-ring"></div>}
         {response?.data?.self_photos.length === 0 &&
           !isLoading &&
@@ -131,6 +138,7 @@ const PhotoList = () => {
             <PhotoListItem
               key={`${item.url}_${index}`}
               item={item}
+              shareActive={selectPhoto.isSelect}
               deleteHandler={selectDeleteHandler}
               selectHandler={selectAllHandler}
             />
@@ -161,6 +169,7 @@ const PhotoList = () => {
         closeHandler={selectDeleteHandler}
         deleteHandler={mutateAsync}
       />
+      <PhotoSearchUserModal />
     </div>
   )
 }

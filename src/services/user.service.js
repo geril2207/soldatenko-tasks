@@ -10,4 +10,7 @@ export const UserService = {
   login(user) {
     return axiosApi.post(`${API_URL}/user/login`, user)
   },
+  findUser(str) {
+    return axiosApi.get(`${API_URL}/user/search?search=${str}`)
+  },
 }

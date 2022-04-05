@@ -1,4 +1,3 @@
-import './App.css'
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,8 +6,6 @@ import {
 } from 'react-router-dom'
 import { privateRoutes, publicRoutes } from './navigation'
 import { Layout } from './components'
-
-
 
 function App() {
   const token = localStorage.getItem('token')

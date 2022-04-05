@@ -7,6 +7,7 @@ const PhotoDeleteModal = ({
   closeHandler,
   deleteHandler,
 }) => {
+  
   return (
     <Modal centered={true} isOpen={condition} toggle={() => closeHandler()}>
       <div className="text-center delete_modal_title mt-3">
