@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('img_name');
             $table->string('img_real_name')->unique();
             $table->unsignedBigInteger('owner_id');
-            $table->foreign('owner_id')->references('id')->on('users');
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
