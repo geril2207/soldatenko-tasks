@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Col, Input, Row } from 'reactstrap'
-import { useDebounceEffect } from '../../../../hooks/useDebounce'
+import { useDebounceEffect } from '../../../../hooks/useDebounceEffect'
 import { canvasPreview } from './canvasPreview'
 import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'

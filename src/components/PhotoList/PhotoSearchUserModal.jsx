@@ -10,28 +10,40 @@ import {
   Input,
   Modal,
 } from 'reactstrap'
-import { useDebounceEffect } from '../../hooks/useDebounce'
+import { useDebounce } from '../../hooks/useDebounce'
+// import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import { UserService } from '../../services/user.service'
 
 const PhotoSearchUserModal = ({ active, submitHandler, closeHandler }) => {
   const [searchInput, setSearchInput] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
+  const debouncedSearchInput = useDebounce(searchInput, 300)
   const {
     data: response = null,
     isError,
     refetch,
-  } = useQuery('user search', () => UserService.findUser(searchInput), {
-    enabled: false,
-  })
-  useDebounceEffect(
-    () => {
-      if (searchInput !== '') {
-        refetch()
-      }
-    },
-    0,
-    [searchInput]
+  } = useQuery(
+    'user search',
+    () => UserService.findUser(debouncedSearchInput),
+    {
+      enabled: false,
+    }
   )
+  useEffect(() => {
+    if (searchInput !== '') {
+      refetch()
+    }
+  }, [debouncedSearchInput])
+
+  // useDebounceEffect(
+  //   () => {
+  //     if (searchInput !== '') {
+  //       refetch()
+  //     }
+  //   },
+  //   0,
+  //   [searchInput]
+  // )
   return (
     <Modal isOpen={active} centered toggle={closeHandler}>
       <Card>
@@ -55,9 +67,13 @@ const PhotoSearchUserModal = ({ active, submitHandler, closeHandler }) => {
                   Что-то пошло не так. Попробуйте перезагрузить страницу
                 </DropdownItem>
               )}
-              {!response?.data?.data.length && !!searchInput && (
-                <DropdownItem>По вашему запросу ничего не найдено</DropdownItem>
-              )}
+              {!response?.data?.data.length &&
+                !!searchInput &&
+                response !== null && (
+                  <DropdownItem>
+                    По вашему запросу ничего не найдено
+                  </DropdownItem>
+                )}
               {!!response?.data?.data.length &&
                 response?.data?.data.map((item, index) => (
                   <DropdownItem

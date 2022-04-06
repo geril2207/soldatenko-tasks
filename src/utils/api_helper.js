@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const API_URL = 'http://localhost:8000/api'
-export const STORAGE_URL = 'http://localhost:8000/private/'
+export const STORAGE_URL = 'http://localhost:8000/api/private/'
 export const axiosApi = axios.create({
   baseURL: API_URL,
 })
