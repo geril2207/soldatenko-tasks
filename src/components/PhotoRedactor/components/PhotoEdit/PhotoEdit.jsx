@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Col, Input, Row } from 'reactstrap'
 import { useDebounceEffect } from '../../../../hooks/useDebounceEffect'
 import { canvasPreview } from './canvasPreview'
-import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop'
+import ReactCrop from 'react-image-crop'
 import 'react-image-crop/dist/ReactCrop.css'
 
 const PhotoEdit = React.forwardRef(({ imgSrc }, ref) => {

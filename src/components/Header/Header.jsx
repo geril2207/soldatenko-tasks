@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 import { UserService } from '../../services/user.service'
@@ -15,7 +15,8 @@ const Header = () => {
     if (!response) {
       refetch()
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetch])
 
   const firstname = response?.data?.data?.firstname
   const surname = response?.data?.data?.surname

@@ -2,11 +2,6 @@ import { QueryCache, useQueryClient } from 'react-query'
 import { API_URL, axiosApi, STORAGE_URL } from '../utils/api_helper'
 
 export const PhotoService = {
-  async getPhotoImg(str) {
-    const res = await axiosApi.get(`${STORAGE_URL}${str}`)
-    const img = await res.blob()
-    return img
-  },
   getPhotos() {
     return axiosApi.get(`${API_URL}/photo`)
   },

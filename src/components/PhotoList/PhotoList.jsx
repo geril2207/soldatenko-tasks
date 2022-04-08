@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap'
 import { useMessageCondition } from '../../hooks/useMessageCondition'
 import { PhotoService } from '../../services/photo.service'
-import { API_URL, STORAGE_URL } from '../../utils/api_helper'
+import { STORAGE_URL } from '../../utils/api_helper'
 import PhotoDeleteModal from './PhotoDeleteModal'
 import PhotoListItem from './PhotoListItem'
 import PhotoSearchUserModal from './PhotoSearchUserModal'
@@ -181,10 +181,6 @@ const PhotoList = () => {
             response?.data?.shared_photos.map((item, index) => (
               <div className="list_item" key={`${item.url}_${index}`}>
                 <img src={`${STORAGE_URL}${item.url}`} alt="Картинка" />
-                <div className="list_item_btns">
-                  <Button color="primary">Редактировать</Button>
-                  <Button color="danger">Удалить</Button>
-                </div>
               </div>
             ))}
         </div>

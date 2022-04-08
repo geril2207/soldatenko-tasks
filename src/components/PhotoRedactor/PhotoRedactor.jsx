@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Col, Input, Row } from 'reactstrap'
-import { useDebounceEffect } from '../../hooks/useDebounce'
-import { canvasPreview } from './components/PhotoEdit/canvasPreview'
-import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop'
+import { Button, Input } from 'reactstrap'
 import 'react-image-crop/dist/ReactCrop.css'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { PhotoService } from '../../services/photo.service'
@@ -22,22 +19,6 @@ import PhotoEdit from './components/PhotoEdit/PhotoEdit'
 //     </div>
 //   )
 // }
-
-function centerAspectCrop(mediaWidth, mediaHeight, aspect) {
-  return centerCrop(
-    makeAspectCrop(
-      {
-        unit: '%',
-        width: 90,
-      },
-      aspect,
-      mediaWidth,
-      mediaHeight
-    ),
-    mediaWidth,
-    mediaHeight
-  )
-}
 
 const PhotoRedactor = ({ history }) => {
   const [imgSrc, setImgSrc] = useState('')
@@ -138,7 +119,7 @@ const PhotoRedactor = ({ history }) => {
         <Button
           className="photored__btn"
           color="primary"
-          disabled={!imgSrc}
+          disabled={!imgSrc || !imgTitle}
           onClick={mutation.mutateAsync}
         >
           Сохранить

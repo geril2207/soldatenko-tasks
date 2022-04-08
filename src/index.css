@@ -193,3 +193,7 @@ code {
 .userlist__dropdown_item_active {
   border: 1px solid var(--main-blue-color);
 }
+
+.list__item_img {
+  object-fit: contain;
+}
