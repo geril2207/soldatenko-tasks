@@ -119,7 +119,7 @@ const PhotoRedactor = ({ history }) => {
         <Button
           className="photored__btn"
           color="primary"
-          disabled={!imgSrc || !imgTitle}
+          disabled={!imgSrc || (!imgTitle && imgId)}
           onClick={mutation.mutateAsync}
         >
           Сохранить
