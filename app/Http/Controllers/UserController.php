@@ -42,7 +42,8 @@ class UserController extends Controller
         if (isset($user->phone)) {
             return response()->json(["success" => false, "message" => "Пользователь с таким телефоном уже существует"], 402);
         }
-        $newUser = User::create(["phone" => $request["phone"], "firstname" => $request["firstname"], "surname" => $request["surname"], "password" => Hash::make($request["password"]), "folder_name" => time()]);
+        $folder_name = md5($request["phone"]);
+        $newUser = User::create(["phone" => $request["phone"], "firstname" => $request["firstname"], "surname" => $request["surname"], "password" => Hash::make($request["password"]), "folder_name" => $folder_name]);
         Storage::disk('private')->makeDirectory($newUser->folder_name);
         return response()->json(["success" => true, "message" => "Пользователь успешно создан", "data" => ["id" => $newUser->id]], 201);
     }

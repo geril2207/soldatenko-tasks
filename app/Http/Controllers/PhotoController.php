@@ -7,10 +7,23 @@ use App\Models\Share;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
+    public function getPhotoImg(Request $request, $folder, $imgUrl)
+    {
+        $token = $request->bearerToken();
+        $user = User::where('remember_token', '=', $token)->first();
+        if (isset($user)) {
+            $img = Photo::where('img_real_name', '=', $imgUrl)->first();
+            if (isset($img)) {
+                return Storage::disk('private')->get("$folder/$imgUrl");
+            }
+        }
+        return response()->json(["success" => false, "message" => "Доступ запрещен"]);
+    }
     public function getAllPhotosByUser(Request $request)
     {
         $token = $request->bearerToken();
@@ -49,9 +62,7 @@ class PhotoController extends Controller
         $user = User::where('remember_token', $token)->first();
         $folder_name = $user->folder_name;
         if ($request->hasFile("photo")) {
-            $img_name = $request->file("photo")->getClientOriginalName();
-            $img_real_name = explode('.', $img_name);
-            $img_real_name = time() . '.' . end($img_real_name);
+            $img_real_name = Hash::make(time() . "hello world", ["rounds" => 10]);
             Storage::disk('private')->putFileAs("$folder_name/", $request->file('photo'),  $img_real_name);
             $newPhoto = Photo::create(["url" => "$folder_name/$img_real_name", "img_real_name" => $img_real_name, "img_name" => "Untitled", "owner_id" => $user->id]);
             return response()->json(["message" => 'Успешно добавлено', "data" => ["id" => $newPhoto->id, "img_name" => $newPhoto->img_name, "url" => $newPhoto->url]], 201);

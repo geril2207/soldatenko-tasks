@@ -28,5 +28,6 @@ Route::group(['middleware' => 'tokenAuth'], function () {
     Route::delete('/photo/{id}', [PhotoController::class, 'deletePhoto']);
 });
 
+Route::get('/private/{folder}/{img}', [PhotoController::class, 'getPhotoImg']);
 Route::post('/user/signup', [UserController::class, 'store']);
 Route::post('/user/login', [UserController::class, 'login']);
