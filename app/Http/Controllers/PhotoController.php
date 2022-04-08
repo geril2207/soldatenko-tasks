@@ -62,7 +62,7 @@ class PhotoController extends Controller
         $user = User::where('remember_token', $token)->first();
         $folder_name = $user->folder_name;
         if ($request->hasFile("photo")) {
-            $img_real_name = Hash::make(time() . "hello world", ["rounds" => 10]);
+            $img_real_name = md5(time() . "hello world");
             Storage::disk('private')->putFileAs("$folder_name/", $request->file('photo'),  $img_real_name);
             $newPhoto = Photo::create(["url" => "$folder_name/$img_real_name", "img_real_name" => $img_real_name, "img_name" => "Untitled", "owner_id" => $user->id]);
             return response()->json(["message" => 'Успешно добавлено', "data" => ["id" => $newPhoto->id, "img_name" => $newPhoto->img_name, "url" => $newPhoto->url]], 201);
